@@ -11,20 +11,17 @@ type Message struct {
 	Body   string `json:"body"`
 }
 
-var clients []Client
-
 func main() {
-	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {})
-
-	http.HandleFunc("/broadcast/", func(w http.ResponseWriter, r *http.Request) {
-		msg := readMsgFromRequest(r)
-		broadcast(&Message{"Server", msg})
-		fmt.Fprintf(w, "Broadcasting %v", msg)
-	})
-
+	http.HandleFunc("/broadcast/", broadcastHandler)
 	http.Handle("/ws", wsHandler)
 
 	http.ListenAndServe(":3000", nil)
+}
+
+func broadcastHandler(w http.ResponseWriter, r *http.Request) {
+	msg := readMsgFromRequest(r)
+	broadcast(&Message{"Server", msg})
+	fmt.Fprintf(w, "Broadcasting %v", msg)
 }
 
 func readMsgFromRequest(r *http.Request) string {

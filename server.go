@@ -6,6 +6,8 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+var clients []Client
+
 var wsHandler = websocket.Handler(onWsConnect)
 
 func onWsConnect(ws *websocket.Conn) {
